@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Nabhindu Technologies — Website
 
 **Innovate. Build. Grow.**
@@ -150,3 +151,6 @@ The site has no login or accounts, as requested. Database and form logic live in
 - Layouts at 390 px (iPhone 13), 820 px (tablet) and 1440 px (desktop), with no horizontal overflow.
 - No browser console errors.
 - Lighthouse (local production build): Accessibility 100, Best Practices 100, SEO 100. Performance 88 on desktop and about 65–70 under Lighthouse's simulated slow-phone throttling. The measured mobile LCP is 1.3 s, CLS is about 0.
+=======
+# startup
+>>>>>>> 87d208ab87939b1f1f36ad0a7453465b622a69a6
