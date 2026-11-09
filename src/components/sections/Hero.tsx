@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import PixelField from "@/components/ui/PixelField";
 import { Magnetic, SplitWords } from "@/components/ui/motion";
-import HeroVisual from "./HeroVisual";
+import Hero3D from "./Hero3D";
+import { formatINR, startingPrice } from "@/lib/data";
 
 const HEADLINE = "We build digital experiences that move businesses forward.";
 
@@ -106,10 +107,31 @@ export default function Hero() {
               </a>
             </Magnetic>
           </div>
+
+          <a
+            href="#pricing"
+            style={{ animationDelay: "calc(var(--intro) + 1s)" }}
+            className="intro-fade group mt-7 inline-flex items-center gap-3 text-sm text-white/70 transition-colors hover:text-white"
+          >
+            <span className="price-cube" aria-hidden>
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </span>
+            <span>
+              Website projects starting at <strong className="font-display text-base font-bold text-white">{formatINR(startingPrice)}</strong>
+            </span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="transition-transform group-hover:translate-x-1" aria-hidden>
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
         </motion.div>
 
         <motion.div style={{ y: visualY }} className="relative px-4 sm:px-10 lg:px-0">
-          <HeroVisual />
+          <Hero3D />
         </motion.div>
       </div>
 

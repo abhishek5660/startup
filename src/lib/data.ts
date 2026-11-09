@@ -185,10 +185,81 @@ export const values = [
 export const serviceOptions = services.map((s) => s.title).concat(["Something else"]);
 
 export const budgetOptions = [
-  "Under ₹25,000",
-  "₹25,000 – ₹50,000",
-  "₹50,000 – ₹1,00,000",
-  "₹1,00,000 – ₹2,50,000",
-  "Above ₹2,50,000",
+  "₹5,000 – ₹15,000",
+  "₹15,000 – ₹35,000",
+  "₹35,000 – ₹75,000",
+  "₹75,000 – ₹1,50,000",
+  "Above ₹1,50,000",
   "Not sure yet",
 ];
+
+export type PricingPlan = {
+  id: string;
+  name: string;
+  /** Starting price in rupees. */
+  price: number;
+  tagline: string;
+  features: string[];
+  /** Service preselected in the contact form when this plan is chosen. */
+  service: string;
+  /** Budget preselected in the contact form (must match a budgetOptions entry). */
+  budget: string;
+  popular?: boolean;
+};
+
+/**
+ * PRICING — "starting at" prices. Edit freely; the first plan sets the
+ * "projects starting at ₹…" line shown in the hero.
+ */
+export const pricingPlans: PricingPlan[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    price: 5000,
+    tagline: "A clean, professional one-page website to get your business online.",
+    features: [
+      "Single-page responsive website",
+      "Up to 5 content sections",
+      "Contact form and WhatsApp / call buttons",
+      "Basic on-page SEO",
+      "Mobile, tablet and desktop tested",
+    ],
+    service: "Frontend Web Development",
+    budget: "₹5,000 – ₹15,000",
+  },
+  {
+    id: "business",
+    name: "Business",
+    price: 15000,
+    tagline: "A multi-page website designed around your brand, with motion and 3D touches.",
+    features: [
+      "Up to 6 custom-designed pages",
+      "Animated / 3D hero section",
+      "Contact form with email alerts",
+      "Speed and SEO optimisation",
+      "Google Maps and social links",
+    ],
+    service: "Custom Website Development",
+    budget: "₹15,000 – ₹35,000",
+    popular: true,
+  },
+  {
+    id: "fullstack",
+    name: "Full-Stack App",
+    price: 35000,
+    tagline: "A complete web application with a database, API and admin area.",
+    features: [
+      "Custom frontend and backend",
+      "Database design and REST API",
+      "Admin dashboard",
+      "Auth-ready, scalable architecture",
+      "Deployment and handover",
+    ],
+    service: "Full-Stack Web Development",
+    budget: "₹35,000 – ₹75,000",
+  },
+];
+
+export const startingPrice = Math.min(...pricingPlans.map((p) => p.price));
+
+export const formatINR = (n: number) => "₹" + n.toLocaleString("en-IN");

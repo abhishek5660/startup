@@ -5,6 +5,9 @@ import type Lenis from "lenis";
 /** Fired by service cards to preselect a service in the contact form. */
 export const SELECT_SERVICE_EVENT = "nt:select-service";
 
+/** Fired by pricing cards to preselect a service and budget in the contact form. */
+export const SELECT_PLAN_EVENT = "nt:select-plan";
+
 let lenis: Lenis | null = null;
 
 export function setLenis(instance: Lenis | null) {

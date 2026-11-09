@@ -265,3 +265,102 @@
   background-clip: text;
   color: transparent;
 }
+
+/* ── 3D layer ───────────────────────────────────────────────────────── */
+
+/* Small spinning brand cube next to the hero price line */
+.price-cube {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  transform-style: preserve-3d;
+  animation: cube-spin 7s linear infinite;
+}
+.price-cube > span {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, rgba(24, 180, 255, 0.9), rgba(139, 44, 245, 0.9));
+}
+.price-cube > span:nth-child(1) { transform: translateZ(9px); }
+.price-cube > span:nth-child(2) { transform: rotateY(180deg) translateZ(9px); }
+.price-cube > span:nth-child(3) { transform: rotateY(90deg) translateZ(9px); background: linear-gradient(135deg, #1e6bff, #5b33f0); }
+.price-cube > span:nth-child(4) { transform: rotateY(-90deg) translateZ(9px); background: linear-gradient(135deg, #1e6bff, #5b33f0); }
+.price-cube > span:nth-child(5) { transform: rotateX(90deg) translateZ(9px); background: #18b4ff; }
+.price-cube > span:nth-child(6) { transform: rotateX(-90deg) translateZ(9px); background: #8b2cf5; }
+@keyframes cube-spin {
+  from { transform: rotateX(-24deg) rotateY(0deg); }
+  to { transform: rotateX(-24deg) rotateY(360deg); }
+}
+
+/* Perspective grid floor that recedes into the distance */
+.floor-grid {
+  perspective: 600px;
+  overflow: hidden;
+  mask-image: linear-gradient(to top, black 10%, transparent 90%);
+}
+.floor-grid::before {
+  content: "";
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  top: 0;
+  height: 200%;
+  transform-origin: 50% 0;
+  transform: rotateX(72deg);
+  background-image:
+    linear-gradient(rgba(91, 140, 255, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 140, 255, 0.28) 1px, transparent 1px);
+  background-size: 70px 70px;
+  animation: floor-move 6s linear infinite;
+}
+@keyframes floor-move { to { background-position: 0 70px; } }
+
+/* Pricing: three cards angled into a curved row */
+.plan-stage { perspective: 1400px; }
+.plan-turn {
+  transform-style: preserve-3d;
+  transform: rotateY(var(--turn, 0deg)) translateZ(var(--lift, 0px));
+  transition: transform 0.8s var(--ease-out-expo);
+}
+.plan-stage:hover .plan-turn { transform: rotateY(0deg) translateZ(calc(var(--lift, 0px) + 30px)); }
+
+/* Tilted 3D orbit for the technology stack */
+.orbit-3d { perspective: 1500px; }
+.orbit-3d .orbit-plane,
+.orbit-3d .orbit-plane * { transform-style: preserve-3d; }
+.orbit-3d .orbit-plane {
+  transform: rotateX(var(--tilt, 60deg));
+  transition: transform 1.2s var(--ease-out-expo);
+}
+.orbit-3d:hover .orbit-plane { --tilt: 48deg; }
+.orbit-3d .face-camera { transform: rotateX(calc(var(--tilt, 60deg) * -1)); transition: transform 1.2s var(--ease-out-expo); }
+.orbit-3d:hover .face-camera { --tilt: 48deg; }
+
+/* Process step icons flip like a cube face when the step becomes active */
+.step-cube {
+  transform: perspective(500px) rotateY(0deg);
+  transition: transform 0.9s var(--ease-out-expo), border-color 0.5s, box-shadow 0.5s, color 0.5s;
+}
+[data-active="true"] .step-cube { transform: perspective(500px) rotateY(360deg); }
+
+/* Glare that follows the cursor across tilted cards */
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.14), transparent 60%);
+  mix-blend-mode: soft-light;
+}
+.group:hover > .tilt-glare { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-turn, .orbit-3d .orbit-plane, .orbit-3d .face-camera { transition: none; }
+  .price-cube { animation: none; }
+}

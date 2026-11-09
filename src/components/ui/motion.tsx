@@ -25,8 +25,9 @@ export function Reveal({
   return (
     <Comp
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y, rotateX: 18, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
+      style={{ transformPerspective: 1200, transformOrigin: "50% 100%" }}
       viewport={{ once: true, amount }}
       transition={{ duration: 0.9, delay, ease: EASE }}
     >
@@ -88,9 +89,10 @@ export function SplitWords({
             <motion.span
               className={`inline-block ${wordClassName ?? ""}`}
               variants={{
-                hidden: { y: "105%", rotate: 4, opacity: 0 },
-                show: { y: "0%", rotate: 0, opacity: 1, transition: { duration: 1, ease: EASE } },
+                hidden: { y: "105%", rotateX: -85, opacity: 0 },
+                show: { y: "0%", rotateX: 0, opacity: 1, transition: { duration: 1, ease: EASE } },
               }}
+              style={{ transformPerspective: 600, transformOrigin: "50% 100%" }}
             >
               {w}
             </motion.span>
@@ -128,13 +130,13 @@ export function Magnetic({ children, strength = 0.3, className }: { children: Re
 }
 
 /**
- * Card with a subtle 3D tilt and a cursor spotlight (via --mx/--my CSS vars).
+ * Card with a 3D tilt, hover lift, glare and a cursor spotlight (via --mx/--my CSS vars).
  * Tilt is disabled for touch and reduced motion.
  */
 export function TiltCard({
   children,
   className,
-  max = 7,
+  max = 10,
   style,
   ...rest
 }: { children: ReactNode; className?: string; max?: number; style?: CSSProperties } & Omit<
@@ -145,6 +147,7 @@ export function TiltCard({
   const reduce = useReducedMotion();
   const rx = useSpring(0, { stiffness: 180, damping: 20 });
   const ry = useSpring(0, { stiffness: 180, damping: 20 });
+  const lift = useSpring(1, { stiffness: 220, damping: 22 });
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const el = ref.current;
@@ -157,10 +160,12 @@ export function TiltCard({
     if (reduce || e.pointerType !== "mouse") return;
     ry.set((px - 0.5) * max * 2);
     rx.set(-(py - 0.5) * max * 2);
+    lift.set(1.025);
   };
   const onLeave = () => {
     rx.set(0);
     ry.set(0);
+    lift.set(1);
   };
 
   return (
@@ -169,10 +174,11 @@ export function TiltCard({
       onPointerMove={onMove}
       onPointerLeave={onLeave}
       className={className}
-      style={{ ...style, rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
+      style={{ ...style, rotateX: rx, rotateY: ry, scale: lift, transformPerspective: 900 }}
       {...rest}
     >
       {children}
+      <span aria-hidden className="tilt-glare" />
     </motion.div>
   );
 }

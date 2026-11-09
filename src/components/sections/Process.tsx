@@ -82,7 +82,7 @@ export default function Process() {
           <ol className="relative grid gap-10 lg:grid-cols-5 lg:gap-6">
             {processSteps.map((s, i) => (
               <li key={s.number} data-step data-active="false" className="group relative flex gap-6 lg:flex-col lg:items-center lg:gap-0 lg:text-center">
-                <div className="relative z-[1] flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-line bg-white text-slate transition-all duration-500 group-data-[active=true]:border-transparent group-data-[active=true]:text-white group-data-[active=true]:shadow-[0_14px_34px_-12px_rgba(30,107,255,0.7)]">
+                <div className="step-cube relative z-[1] flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-line bg-white text-slate group-data-[active=true]:border-transparent group-data-[active=true]:text-white group-data-[active=true]:shadow-[0_14px_34px_-12px_rgba(30,107,255,0.7)]">
                   <span aria-hidden className="absolute inset-0 rounded-[14px] opacity-0 transition-opacity duration-500 group-data-[active=true]:opacity-100" style={{ background: "var(--brand-gradient)" }} />
                   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="relative" aria-hidden>
                     {glyphs[i]}

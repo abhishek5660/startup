@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { contactSchema, fieldErrors, type ContactInput } from "@/lib/validation";
 import { budgetOptions, serviceOptions } from "@/lib/data";
-import { SELECT_SERVICE_EVENT } from "@/lib/scroll";
+import { SELECT_PLAN_EVENT, SELECT_SERVICE_EVENT } from "@/lib/scroll";
 import { site } from "@/lib/site";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -70,8 +70,21 @@ export default function ContactForm() {
         setErrors((er) => ({ ...er, service: "" }));
       }
     };
+    const onPlan = (e: Event) => {
+      const { service, budget } = (e as CustomEvent<{ service: string; budget: string }>).detail;
+      setValues((v) => ({
+        ...v,
+        service: serviceOptions.includes(service) ? service : v.service,
+        budget: budgetOptions.includes(budget) ? budget : v.budget,
+      }));
+      setErrors((er) => ({ ...er, service: "", budget: "" }));
+    };
     window.addEventListener(SELECT_SERVICE_EVENT, onSelect);
-    return () => window.removeEventListener(SELECT_SERVICE_EVENT, onSelect);
+    window.addEventListener(SELECT_PLAN_EVENT, onPlan);
+    return () => {
+      window.removeEventListener(SELECT_SERVICE_EVENT, onSelect);
+      window.removeEventListener(SELECT_PLAN_EVENT, onPlan);
+    };
   }, []);
 
   const validate = (v: ContactInput) => {

@@ -78,72 +78,90 @@ export default function TechStack() {
           {/* Orbit ecosystem (large screens) */}
           <Reveal delay={0.1} className="hidden lg:block">
             <div
-              className="relative mx-auto aspect-square w-full max-w-[580px]"
+              className="orbit-3d relative mx-auto aspect-square w-full max-w-[600px]"
               onPointerEnter={() => setPaused(true)}
               onPointerLeave={() => setPaused(false)}
             >
-              {RINGS.map((ring) => (
-                <div
-                  key={ring.r}
-                  className="absolute left-1/2 top-1/2 rounded-full border border-dashed border-navy/15"
-                  style={{ width: `${ring.r * 2}%`, height: `${ring.r * 2}%`, transform: "translate(-50%, -50%)" }}
-                />
-              ))}
+              {/* soft shadow pooled under the tilted orbit */}
+              <div aria-hidden className="absolute left-1/2 top-[58%] h-[30%] w-[80%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(30,107,255,0.22),transparent)] blur-xl" />
 
-              <div className="absolute left-1/2 top-1/2 flex h-[20%] w-[20%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_20px_60px_-20px_rgba(30,107,255,0.55)]">
-                <div aria-hidden className="absolute inset-0 animate-ping rounded-full bg-electric/10 [animation-duration:3s]" />
-                <div className="relative h-[52%] w-[70%]">
-                  <Image src="/brand/nabhindu-mark.png" alt="Nabhindu Technologies" fill sizes="100px" className="object-contain" />
-                </div>
-              </div>
-
-              {RINGS.map((ring) => {
-                const items = techStack.filter((t) => ring.cats.includes(t.category));
-                return (
+              <div className="orbit-plane absolute inset-0">
+                {RINGS.map((ring) => (
                   <div
-                    key={`ring-${ring.r}`}
-                    className="absolute inset-0 animate-[orbit-spin_var(--d)_linear_infinite]"
-                    style={
-                      {
-                        "--d": `${ring.dur}s`,
-                        animationDirection: ring.reverse ? "reverse" : "normal",
-                        animationPlayState: paused ? "paused" : "running",
-                      } as React.CSSProperties
-                    }
-                  >
-                    {items.map((t, i) => {
-                      const angle = (i / items.length) * Math.PI * 2 + ring.r / 7;
-                      const x = 50 + Math.cos(angle) * ring.r;
-                      const y = 50 + Math.sin(angle) * ring.r;
-                      const on = isOn(t.category);
-                      return (
-                        <div key={t.name} className="absolute" style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%, -50%)" }}>
-                          <div
-                            className="animate-[orbit-spin_var(--d)_linear_infinite]"
-                            style={{
-                              animationDirection: ring.reverse ? "normal" : "reverse",
-                              animationPlayState: paused ? "paused" : "running",
-                            }}
-                          >
+                    key={ring.r}
+                    className="absolute left-1/2 top-1/2 rounded-full border-2 border-dashed border-navy/15"
+                    style={{ width: `${ring.r * 2}%`, height: `${ring.r * 2}%`, transform: "translate(-50%, -50%)" }}
+                  />
+                ))}
+                <div
+                  aria-hidden
+                  className="absolute left-1/2 top-1/2 h-[26%] w-[26%] rounded-full bg-[radial-gradient(circle,rgba(30,107,255,0.25),transparent_70%)]"
+                  style={{ transform: "translate(-50%, -50%)" }}
+                />
+
+                {/* centre: the brand mark standing upright on the orbit plane */}
+                <div className="absolute left-1/2 top-1/2 h-[20%] w-[20%]" style={{ transform: "translate(-50%, -50%)" }}>
+                  <div className="face-camera relative h-full w-full" style={{ transformOrigin: "50% 100%" }}>
+                    <div className="flex h-full w-full items-center justify-center rounded-full bg-white shadow-[0_30px_60px_-20px_rgba(30,107,255,0.6)]" style={{ transform: "translateY(-45%)" }}>
+                      <div aria-hidden className="absolute inset-0 animate-ping rounded-full bg-electric/10 [animation-duration:3s]" />
+                      <div className="relative h-[52%] w-[70%]">
+                        <Image src="/brand/nabhindu-mark.png" alt="Nabhindu Technologies" fill sizes="100px" className="object-contain" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {RINGS.map((ring) => {
+                  const items = techStack.filter((t) => ring.cats.includes(t.category));
+                  return (
+                    <div
+                      key={`ring-${ring.r}`}
+                      className="absolute inset-0 animate-[orbit-spin_var(--d)_linear_infinite]"
+                      style={
+                        {
+                          "--d": `${ring.dur}s`,
+                          animationDirection: ring.reverse ? "reverse" : "normal",
+                          animationPlayState: paused ? "paused" : "running",
+                        } as React.CSSProperties
+                      }
+                    >
+                      {items.map((t, i) => {
+                        const angle = (i / items.length) * Math.PI * 2 + ring.r / 7;
+                        const x = 50 + Math.cos(angle) * ring.r;
+                        const y = 50 + Math.sin(angle) * ring.r;
+                        const on = isOn(t.category);
+                        return (
+                          <div key={t.name} className="absolute" style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%, -50%)" }}>
                             <div
-                              data-cursor="hover"
-                              title={t.name}
-                              className={`group relative flex h-14 w-14 items-center justify-center rounded-2xl border bg-white shadow-[0_12px_30px_-16px_rgba(10,16,51,0.45)] transition-all duration-500 hover:scale-115 ${
-                                on ? "border-line opacity-100" : "scale-75 border-transparent opacity-25 grayscale"
-                              }`}
+                              className="animate-[orbit-spin_var(--d)_linear_infinite]"
+                              style={{
+                                animationDirection: ring.reverse ? "normal" : "reverse",
+                                animationPlayState: paused ? "paused" : "running",
+                              }}
                             >
-                              <TechLogo icon={t.icon} name={t.name} size={26} />
-                              <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-navy px-2.5 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
-                                {t.name}
-                              </span>
+                              {/* counter-tilt so every logo tile stands up and faces the viewer */}
+                              <div className="face-camera" style={{ transformOrigin: "50% 100%" }}>
+                                <div
+                                  data-cursor="hover"
+                                  title={t.name}
+                                  className={`group relative flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-2xl border bg-white shadow-[0_18px_30px_-14px_rgba(10,16,51,0.5)] transition-all duration-500 hover:scale-115 ${
+                                    on ? "border-line opacity-100" : "scale-75 border-transparent opacity-25 grayscale"
+                                  }`}
+                                >
+                                  <TechLogo icon={t.icon} name={t.name} size={26} />
+                                  <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-navy px-2.5 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+                                    {t.name}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </Reveal>
         </div>
