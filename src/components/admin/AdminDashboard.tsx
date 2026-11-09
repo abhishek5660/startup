@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ConsultationRow, InquiryRow } from "@/lib/db";
+import AdminCharts from "./AdminCharts";
 
 type Tab = "inquiries" | "calls";
 type Kind = "inquiry" | "consultation";
@@ -47,15 +48,6 @@ async function save(kind: Kind, id: string, patch: { status?: string; notes?: st
   const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
   if (res.status === 401) window.location.href = "/admin/login";
   if (!res.ok || !data.ok) throw new Error(data.error || "Couldn't save.");
-}
-
-function Stat({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
-  return (
-    <div className={`rounded-2xl p-5 ${accent ? "bg-ink text-white shadow-[0_24px_50px_-30px_rgba(30,107,255,0.8)]" : "bg-white text-navy shadow-[0_16px_40px_-32px_rgba(10,16,51,0.6)]"}`}>
-      <p className={`text-sm ${accent ? "text-white/60" : "text-slate"}`}>{label}</p>
-      <p className="mt-1 font-display text-3xl font-extrabold">{value}</p>
-    </div>
-  );
 }
 
 function Actions({ name, phone, email, context }: { name: string; phone: string; email?: string | null; context: string }) {
@@ -162,13 +154,6 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
   };
 
   const today = todayIST();
-  const month = today.slice(0, 7);
-  const stats = {
-    newInq: inquiries.filter((i) => i.status === "new").length,
-    upcoming: calls.filter((c) => c.call_date >= today && (c.status === "requested" || c.status === "confirmed")).length,
-    todayCalls: calls.filter((c) => c.call_date === today && c.status !== "cancelled" && c.status !== "spam").length,
-    monthInq: inquiries.filter((i) => new Date(i.created_at).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }).startsWith(month)).length,
-  };
 
   const statusMap = tab === "inquiries" ? INQ_STATUS : CALL_STATUS;
   const rows = tab === "inquiries" ? inquiries : calls;
@@ -254,14 +239,10 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
       <div className="container-x mt-8">
         {error && <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">{error}</div>}
 
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <Stat label="New inquiries" value={stats.newInq} accent />
-          <Stat label="Upcoming calls" value={stats.upcoming} />
-          <Stat label="Calls today" value={stats.todayCalls} />
-          <Stat label="Inquiries this month" value={stats.monthInq} />
-        </div>
+        <AdminCharts inquiries={inquiries} calls={calls} />
 
-        <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <h2 className="mt-12 font-display text-2xl font-bold text-navy">All records</h2>
+        <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div role="tablist" className="inline-flex rounded-full bg-white p-1 shadow-[0_10px_30px_-24px_rgba(10,16,51,0.6)]">
             {(["inquiries", "calls"] as Tab[]).map((t) => (
               <button
