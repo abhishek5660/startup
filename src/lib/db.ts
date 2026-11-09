@@ -111,3 +111,78 @@ export async function insertConsultation(
 export async function markConsultationEmail(id: string, sent: boolean, error?: string) {
   await getPool().query(`UPDATE consultations SET email_sent = $2, email_error = $3 WHERE id = $1`, [id, sent, error ? error.slice(0, 500) : null]);
 }
+
+/* ── Admin dashboard ─────────────────────────────────────────────── */
+
+export const INQUIRY_STATUSES = ["new", "contacted", "in_progress", "closed", "spam"] as const;
+export const CONSULTATION_STATUSES = ["requested", "confirmed", "done", "cancelled", "spam"] as const;
+
+export type InquiryRow = {
+  id: string;
+  reference: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  company: string | null;
+  service: string;
+  budget: string | null;
+  message: string;
+  status: (typeof INQUIRY_STATUSES)[number];
+  notes: string | null;
+  email_sent: boolean;
+  created_at: string;
+};
+
+export type ConsultationRow = {
+  id: string;
+  reference: string;
+  full_name: string;
+  phone: string;
+  email: string | null;
+  call_date: string;
+  call_slot: string;
+  mode: string;
+  topic: string | null;
+  status: (typeof CONSULTATION_STATUSES)[number];
+  notes: string | null;
+  email_sent: boolean;
+  created_at: string;
+};
+
+export async function listInquiries(limit = 1000): Promise<InquiryRow[]> {
+  const { rows } = await getPool().query<InquiryRow>(
+    `SELECT id::text, reference, full_name, email, phone, company, service, budget, message, status, notes, email_sent,
+            to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS created_at
+       FROM inquiries ORDER BY created_at DESC LIMIT $1`,
+    [limit],
+  );
+  return rows;
+}
+
+export async function listConsultations(limit = 1000): Promise<ConsultationRow[]> {
+  const { rows } = await getPool().query<ConsultationRow>(
+    `SELECT id::text, reference, full_name, phone, email, to_char(call_date, 'YYYY-MM-DD') AS call_date, call_slot, mode, topic,
+            status, notes, email_sent, to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS created_at
+       FROM consultations ORDER BY call_date DESC, created_at DESC LIMIT $1`,
+    [limit],
+  );
+  return rows;
+}
+
+/** Updates status and/or notes. Returns false if the row doesn't exist. */
+export async function updateRecord(kind: "inquiry" | "consultation", id: string, patch: { status?: string; notes?: string }) {
+  const table = kind === "inquiry" ? "inquiries" : "consultations";
+  const sets: string[] = [];
+  const vals: unknown[] = [id];
+  if (patch.status !== undefined) {
+    vals.push(patch.status);
+    sets.push(`status = $${vals.length}`);
+  }
+  if (patch.notes !== undefined) {
+    vals.push(patch.notes || null);
+    sets.push(`notes = $${vals.length}`);
+  }
+  if (!sets.length) return true;
+  const { rowCount } = await getPool().query(`UPDATE ${table} SET ${sets.join(", ")} WHERE id = $1::bigint`, vals);
+  return (rowCount ?? 0) > 0;
+}

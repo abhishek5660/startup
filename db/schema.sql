@@ -62,3 +62,7 @@ BEGIN
     EXECUTE 'ALTER TABLE consultations ENABLE ROW LEVEL SECURITY';
   END IF;
 END $$;
+
+-- Admin dashboard: private notes on each record (safe to re-run on existing databases)
+ALTER TABLE inquiries     ADD COLUMN IF NOT EXISTS notes TEXT;
+ALTER TABLE consultations ADD COLUMN IF NOT EXISTS notes TEXT;
