@@ -2,14 +2,21 @@ import Image from "next/image";
 import { site } from "@/lib/site";
 
 const quickLinks = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Portfolio", href: "#portfolio" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/#about" },
+  { label: "Pricing", href: "/#pricing" },
+  { label: "Estimate your project", href: "/#estimate" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/#contact" },
 ];
 
-const footerServices = ["Frontend Development", "Full-Stack Development", "Custom Websites", "UI/UX Design"];
+const footerServices = [
+  { label: "Frontend Development", href: "/services/frontend-development" },
+  { label: "Full-Stack Development", href: "/services/full-stack-development" },
+  { label: "Custom Websites", href: "/services/custom-website-development" },
+  { label: "UI/UX Design", href: "/services/ui-ux-design" },
+  { label: "Website Optimization", href: "/services/website-optimization" },
+];
 
 const socialIcons: Record<string, { label: string; d: string }> = {
   linkedin: {
@@ -38,7 +45,7 @@ export default function Footer() {
 
       <div className="container-x relative grid gap-12 pb-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_1fr_1.2fr]">
         <div>
-          <a href="#home" className="inline-flex items-center gap-3">
+          <a href="/" className="inline-flex items-center gap-3">
             <Image src="/brand/nabhindu-mark.png" alt="" width={82} height={40} className="h-10 w-auto" />
             <span className="font-display text-lg font-extrabold leading-tight tracking-wide">
               Nabhindu
@@ -91,9 +98,9 @@ export default function Footer() {
           <h2 className="font-display text-sm font-semibold text-white/50">Services</h2>
           <ul className="mt-4 space-y-2.5">
             {footerServices.map((s) => (
-              <li key={s}>
-                <a href="#services" className="text-[0.95rem] text-white/80 transition-colors hover:text-sky">
-                  {s}
+              <li key={s.href}>
+                <a href={s.href} className="text-[0.95rem] text-white/80 transition-colors hover:text-sky">
+                  {s.label}
                 </a>
               </li>
             ))}
@@ -120,7 +127,7 @@ export default function Footer() {
       <div className="relative border-t border-white/10">
         <div className="container-x flex flex-col gap-2 py-6 text-sm text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Nabhindu Technologies. All Rights Reserved.</p>
-          <a href="#home" className="transition-colors hover:text-white">
+          <a href="#top" className="transition-colors hover:text-white">
             Back to top ↑
           </a>
         </div>

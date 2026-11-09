@@ -6,6 +6,7 @@ import { services, type Service } from "@/lib/data";
 import { Reveal, SplitWords, TiltCard } from "@/components/ui/motion";
 import ServiceIcon from "@/components/ui/ServiceIcon";
 import { scrollToHash, SELECT_SERVICE_EVENT } from "@/lib/scroll";
+import { servicePageById } from "@/lib/service-pages";
 
 
 function ServiceCard({ s, large }: { s: Service; large: boolean }) {
@@ -75,9 +76,16 @@ function ServiceCard({ s, large }: { s: Service; large: boolean }) {
                     </li>
                   ))}
                 </ul>
-                <button type="button" onClick={discuss} className="btn btn-primary mt-6 !py-2.5 text-sm">
-                  Discuss this service
-                </button>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button type="button" onClick={discuss} className="btn btn-primary !py-2.5 text-sm">
+                    Discuss this service
+                  </button>
+                  {servicePageById(s.id) && (
+                    <a href={`/services/${servicePageById(s.id)!.slug}`} className="btn btn-ghost-dark !py-2.5 text-sm">
+                      Full details →
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           )}

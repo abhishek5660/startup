@@ -27,8 +27,11 @@ export default function SmoothScroll() {
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const a = (e.target as HTMLElement).closest("a");
-      const href = a?.getAttribute("href");
-      if (!href || !href.startsWith("#") || href.length < 2) return;
+      let href = a?.getAttribute("href");
+      if (!href) return;
+      // "/#section" links scroll smoothly when we're already on the homepage.
+      if (href.startsWith("/#") && location.pathname === "/") href = href.slice(1);
+      if (!href.startsWith("#") || href.length < 2) return;
       if (scrollToHash(href)) e.preventDefault();
     };
     document.addEventListener("click", onClick);

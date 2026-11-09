@@ -27,7 +27,8 @@ export function getLenis() {
 
 /** Smoothly scrolls to `#id` (or the top for `#home`), accounting for the fixed navbar. */
 export function scrollToHash(hash: string) {
-  const id = hash.replace(/^#/, "");
+  const raw = hash.replace(/^#/, "");
+  const id = raw === "top" ? "home" : raw;
   const el = id === "home" || id === "" ? document.body : document.getElementById(id);
   if (!el) return false;
   if (lenis) {

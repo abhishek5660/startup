@@ -1,6 +1,14 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
+import { servicePages } from "@/lib/service-pages";
+import { posts } from "@/lib/posts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [{ url: `${site.url}/`, lastModified: new Date(), changeFrequency: "monthly", priority: 1 }];
+  const now = new Date();
+  return [
+    { url: `${site.url}/`, lastModified: now, changeFrequency: "monthly", priority: 1 },
+    ...servicePages.map((s) => ({ url: `${site.url}/services/${s.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.9 })),
+    { url: `${site.url}/blog`, lastModified: posts[0] ? new Date(posts[0].date) : now, changeFrequency: "weekly", priority: 0.7 },
+    ...posts.map((p) => ({ url: `${site.url}/blog/${p.slug}`, lastModified: new Date(p.date), changeFrequency: "yearly" as const, priority: 0.6 })),
+  ];
 }

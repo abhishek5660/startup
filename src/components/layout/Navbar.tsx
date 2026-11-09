@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { nav, site } from "@/lib/site";
 import { getLenis } from "@/lib/scroll";
 import { Magnetic } from "@/components/ui/motion";
@@ -11,6 +12,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
+  const pathname = usePathname();
+  const onHome = pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -21,6 +24,10 @@ export default function Navbar() {
 
   // Highlight the section currently in view.
   useEffect(() => {
+    if (!onHome) {
+      setActive(pathname.startsWith("/blog") ? "blog" : pathname.startsWith("/services") ? "services" : "");
+      return;
+    }
     // Observe every section so the pill clears in sections that aren't in the menu (e.g. Process).
     const els = Array.from(document.querySelectorAll<HTMLElement>("main section[id]"));
     const io = new IntersectionObserver(
@@ -31,7 +38,7 @@ export default function Navbar() {
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [onHome, pathname]);
 
   // Lock scrolling and close on Escape while the mobile menu is open.
   useEffect(() => {
@@ -60,7 +67,7 @@ export default function Navbar() {
             : "border border-transparent bg-transparent"
         }`}
       >
-        <a href="#home" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
+        <a href={onHome ? "#home" : "/"} className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
           <Image src="/brand/nabhindu-mark.png" alt="" width={62} height={30} priority className="h-[30px] w-auto" />
           <span className="flex flex-col leading-none">
             <span className={`font-display text-[1.02rem] font-extrabold tracking-[0.04em] transition-colors duration-500 ${dark ? "text-white" : "text-navy"}`}>
@@ -74,7 +81,7 @@ export default function Navbar() {
 
         <ul className="hidden items-center gap-1 lg:flex">
           {nav.map((item) => {
-            const isActive = active === item.href.slice(1);
+            const isActive = active === (item.href.split("#")[1] ?? item.href.slice(1));
             return (
               <li key={item.href}>
                 <a
@@ -100,7 +107,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           <Magnetic className="hidden sm:inline-flex">
-            <a href="#contact" className="btn btn-primary !px-5 !py-2.5 text-sm">
+            <a href="/#contact" className="btn btn-primary !px-5 !py-2.5 text-sm">
               Start a project
             </a>
           </Magnetic>
