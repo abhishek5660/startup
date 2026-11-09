@@ -263,3 +263,44 @@ export const pricingPlans: PricingPlan[] = [
 export const startingPrice = Math.min(...pricingPlans.map((p) => p.price));
 
 export const formatINR = (n: number) => "₹" + n.toLocaleString("en-IN");
+
+/* ── Project estimator ─────────────────────────────────────────────
+ * Rates used by the "Estimate your project" calculator. All amounts in ₹.
+ * Change these freely — the calculator updates automatically.
+ */
+export const estimator = {
+  /** Project types: base price includes `pagesIncluded` pages. */
+  types: [
+    { id: "starter", label: "One-page website", base: 5000, pagesIncluded: 1, service: "Frontend Web Development" },
+    { id: "business", label: "Business website", base: 15000, pagesIncluded: 6, service: "Custom Website Development" },
+    { id: "fullstack", label: "Web application", base: 35000, pagesIncluded: 8, service: "Full-Stack Web Development" },
+  ],
+  /** Price for every page beyond the included ones. */
+  extraPage: 1500,
+  maxPages: 20,
+  features: [
+    { id: "3d", label: "3D / animated hero", price: 4000 },
+    { id: "blog", label: "Blog / news section", price: 3000 },
+    { id: "login", label: "User login & accounts", price: 6000 },
+    { id: "admin", label: "Admin dashboard", price: 8000 },
+    { id: "payment", label: "Online payments (Razorpay etc.)", price: 7000 },
+    { id: "booking", label: "Appointment booking", price: 5000 },
+    { id: "lang", label: "Hindi + English", price: 3000 },
+    { id: "seo", label: "Advanced SEO setup", price: 2500 },
+  ],
+  /** Faster delivery multiplies the total. */
+  speeds: [
+    { id: "standard", label: "Standard", multiplier: 1 },
+    { id: "rush", label: "Rush (priority)", multiplier: 1.25 },
+  ],
+};
+
+/** Free consultation call options. */
+export const consultation = {
+  durationMinutes: 15,
+  /** Time slots offered each working day (IST). */
+  slots: ["10:30 AM", "12:00 PM", "2:30 PM", "4:00 PM", "6:00 PM"],
+  /** Days ahead that can be booked; Sundays are skipped. */
+  daysAhead: 10,
+  modes: ["WhatsApp call", "Phone call", "Google Meet"] as const,
+};

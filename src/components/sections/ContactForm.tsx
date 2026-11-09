@@ -71,13 +71,14 @@ export default function ContactForm() {
       }
     };
     const onPlan = (e: Event) => {
-      const { service, budget } = (e as CustomEvent<{ service: string; budget: string }>).detail;
+      const { service, budget, message } = (e as CustomEvent<{ service: string; budget: string; message?: string }>).detail;
       setValues((v) => ({
         ...v,
         service: serviceOptions.includes(service) ? service : v.service,
         budget: budgetOptions.includes(budget) ? budget : v.budget,
+        message: message ?? v.message,
       }));
-      setErrors((er) => ({ ...er, service: "", budget: "" }));
+      setErrors((er) => ({ ...er, service: "", budget: "", ...(message ? { message: "" } : {}) }));
     };
     window.addEventListener(SELECT_SERVICE_EVENT, onSelect);
     window.addEventListener(SELECT_PLAN_EVENT, onPlan);

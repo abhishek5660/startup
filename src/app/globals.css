@@ -364,3 +364,18 @@
   .plan-turn, .orbit-3d .orbit-plane, .orbit-3d .face-camera { transition: none; }
   .price-cube { animation: none; }
 }
+
+/* Estimator range slider */
+.estimator-range { background: linear-gradient(90deg, #18b4ff, #1e6bff var(--fill, 0%), #e2e6fa var(--fill, 0%)); }
+.estimator-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px; height: 24px; border-radius: 8px;
+  background: #fff; border: 3px solid #1e6bff;
+  box-shadow: 0 6px 16px -6px rgba(30, 107, 255, 0.8);
+  transition: transform 0.2s;
+}
+.estimator-range::-webkit-slider-thumb:hover { transform: scale(1.12) rotate(45deg); }
+.estimator-range::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 8px;
+  background: #fff; border: 3px solid #1e6bff;
+}

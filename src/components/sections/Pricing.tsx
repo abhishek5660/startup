@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { formatINR, pricingPlans, startingPrice, type PricingPlan } from "@/lib/data";
 import { Reveal, SplitWords, TiltCard } from "@/components/ui/motion";
-import { scrollToHash, SELECT_PLAN_EVENT } from "@/lib/scroll";
+import { openBooking, scrollToHash, SELECT_PLAN_EVENT } from "@/lib/scroll";
 
 function PlanCard({ plan, index }: { plan: PricingPlan; index: number }) {
   const choose = () => {
@@ -98,8 +98,15 @@ export default function Pricing() {
 
         <Reveal delay={0.2}>
           <p className="mt-12 text-center text-sm text-white/50">
-            Need something different? <a href="#contact" className="font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">Tell us about your project</a> and we&apos;ll
-            suggest the right fit.
+            Need something different?{" "}
+            <a href="#estimate" className="font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">
+              Estimate your project
+            </a>{" "}
+            in 30 seconds, or{" "}
+            <button type="button" onClick={openBooking} className="font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">
+              book a free call
+            </button>
+            .
           </p>
         </Reveal>
       </div>

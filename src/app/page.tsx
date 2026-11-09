@@ -6,6 +6,9 @@ import Services from "@/components/sections/Services";
 import TechStack from "@/components/sections/TechStack";
 import Portfolio from "@/components/sections/Portfolio";
 import Pricing from "@/components/sections/Pricing";
+import Estimator from "@/components/sections/Estimator";
+import BookingModal from "@/components/sections/BookingModal";
+import WhatsAppButton from "@/components/layout/WhatsAppButton";
 import Process from "@/components/sections/Process";
 import WhyUs from "@/components/sections/WhyUs";
 import Contact from "@/components/sections/Contact";
@@ -21,11 +24,14 @@ export default function HomePage() {
         <TechStack />
         <Portfolio />
         <Pricing />
+        <Estimator />
         <Process />
         <WhyUs />
         <Contact />
       </main>
       <Footer />
+      <WhatsAppButton />
+      <BookingModal />
     </>
   );
 }

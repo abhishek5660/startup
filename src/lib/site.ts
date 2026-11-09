@@ -14,6 +14,8 @@ export const site = {
   email: "nabhindutechnologies@gmail.com",
   phone: "+91 8219472136",
   phoneHref: "tel:+918219472136",
+  /** WhatsApp number in international format, digits only. */
+  whatsapp: "918219472136",
   address: {
     line: "Sector 88, Faridabad",
     region: "Haryana",
@@ -42,3 +44,8 @@ export const nav = [
   { label: "Pricing", href: "#pricing" },
   { label: "Contact", href: "#contact" },
 ] as const;
+
+/** Builds a WhatsApp chat link with a pre-filled message. */
+export function whatsappLink(text: string) {
+  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+}

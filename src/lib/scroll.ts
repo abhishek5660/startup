@@ -8,6 +8,13 @@ export const SELECT_SERVICE_EVENT = "nt:select-service";
 /** Fired by pricing cards to preselect a service and budget in the contact form. */
 export const SELECT_PLAN_EVENT = "nt:select-plan";
 
+/** Opens the free-consultation booking dialog from anywhere on the page. */
+export const OPEN_BOOKING_EVENT = "nt:open-booking";
+
+export function openBooking() {
+  window.dispatchEvent(new Event(OPEN_BOOKING_EVENT));
+}
+
 let lenis: Lenis | null = null;
 
 export function setLenis(instance: Lenis | null) {

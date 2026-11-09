@@ -1,7 +1,8 @@
 "use client";
 
 import { Reveal, SplitWords, Pixels } from "@/components/ui/motion";
-import { site } from "@/lib/site";
+import { site, whatsappLink } from "@/lib/site";
+import { openBooking } from "@/lib/scroll";
 import ContactForm from "./ContactForm";
 
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.address.full)}`;
@@ -81,6 +82,26 @@ export default function Contact() {
               );
             })}
           </ul>
+
+          <Reveal delay={0.35}>
+            <div className="mt-8 rounded-3xl bg-ink p-6 text-white shadow-[0_30px_70px_-35px_rgba(30,107,255,0.7)]">
+              <p className="font-display text-lg font-bold">Prefer to talk first?</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-haze">Book a free 15-minute call, or message us on WhatsApp.</p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <button type="button" onClick={openBooking} className="btn btn-primary !py-2.5 text-sm">
+                  Book a free call
+                </button>
+                <a
+                  href={whatsappLink(`Hi ${site.shortName}! I'd like to discuss a website project.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn !py-2.5 bg-[#25d366] text-sm text-white hover:brightness-110"
+                >
+                  WhatsApp us
+                </a>
+              </div>
+            </div>
+          </Reveal>
         </div>
 
         <Reveal delay={0.1} amount={0.1}>
