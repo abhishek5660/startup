@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -144,13 +144,54 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
   const [open, setOpen] = useState<string | null>(null);
   const [toast, setToast] = useState<{ m: string; err?: boolean } | null>(null);
 
-  // Pick up fresh data after "Refresh" (router.refresh re-renders the server page).
-  useEffect(() => setInquiries(inq0), [inq0]);
-  useEffect(() => setCalls(calls0), [calls0]);
+  // ── Live data ───────────────────────────────────────────────
+  // Every 30s (while this tab is visible) the server page re-reads the database,
+  // so new inquiries/bookings appear and every chart recalculates on its own.
+  const REFRESH_MS = 30_000;
+  const [refreshing, startRefresh] = useTransition();
+  const [updatedAt, setUpdatedAt] = useState(() => Date.now());
+  const [, tick] = useState(0);
+  const known = useRef({ inq: new Set(inq0.map((r) => r.id)), calls: new Set(calls0.map((r) => r.id)) });
 
-  const showToast = (m: string, err?: boolean) => {
+  const refresh = () => startRefresh(() => router.refresh());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (document.visibilityState === "visible") refresh();
+      tick((n) => n + 1); // keeps the "updated … ago" label current
+    }, REFRESH_MS);
+    const onVisible = () => document.visibilityState === "visible" && refresh();
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fresh rows from the server replace local state; announce anything new.
+  useEffect(() => {
+    setInquiries(inq0);
+    setCalls(calls0);
+    setUpdatedAt(Date.now());
+    const newInq = inq0.filter((r) => !known.current.inq.has(r.id)).length;
+    const newCalls = calls0.filter((r) => !known.current.calls.has(r.id)).length;
+    known.current = { inq: new Set(inq0.map((r) => r.id)), calls: new Set(calls0.map((r) => r.id)) };
+    if (newInq || newCalls) {
+      const parts = [newInq && `${newInq} new inquir${newInq > 1 ? "ies" : "y"}`, newCalls && `${newCalls} new call booking${newCalls > 1 ? "s" : ""}`].filter(Boolean);
+      showToast(`🎉 ${parts.join(" and ")}`, false, 8000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inq0, calls0]);
+
+  const agoSec = Math.max(0, Math.round((Date.now() - updatedAt) / 1000));
+  const ago = agoSec < 45 ? "just now" : `${Math.round(agoSec / 60)} min ago`;
+
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const showToast = (m: string, err?: boolean, ms = 2600) => {
     setToast({ m, err });
-    setTimeout(() => setToast(null), 2600);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), ms);
   };
 
   const today = todayIST();
@@ -220,8 +261,15 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
             <span className="font-display font-bold text-navy">Dashboard</span>
           </div>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => router.refresh()} className="btn btn-ghost-light !px-3 !py-2 text-sm" title="Load latest">
-              Refresh
+            <span className="hidden items-center gap-2 text-xs text-slate md:inline-flex" aria-live="polite">
+              <span className="relative flex h-2 w-2">
+                <span className={`absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 ${refreshing ? "animate-ping" : ""}`} />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              Live · updated {refreshing ? "now…" : ago}
+            </span>
+            <button type="button" onClick={refresh} disabled={refreshing} className="btn btn-ghost-light !px-3 !py-2 text-sm disabled:opacity-60" title="Load latest">
+              {refreshing ? "Updating…" : "Refresh"}
             </button>
             <a href={`/api/admin/export?kind=${tab}`} className="btn btn-ghost-light hidden !px-3 !py-2 text-sm sm:inline-flex">
               Export CSV

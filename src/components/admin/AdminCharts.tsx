@@ -18,8 +18,9 @@ function addDays(ymd: string, n: number) {
   d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().slice(0, 10);
 }
+/** Axis top that keeps the half-way tick a whole number (counts are never fractional). */
 function niceMax(v: number) {
-  if (v <= 4) return 4;
+  if (v <= 10) return Math.max(4, Math.ceil(v / 2) * 2);
   const step = Math.pow(10, Math.floor(Math.log10(v)));
   const n = Math.ceil(v / step);
   return (n <= 2 ? 2 : n <= 5 ? 5 : 10) * step;
