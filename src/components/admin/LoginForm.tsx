@@ -33,7 +33,6 @@ export default function LoginForm({ configured }: { configured: boolean }) {
       <div aria-hidden className="absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-electric/30 blur-[120px]" />
       <div aria-hidden className="absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full bg-violet/30 blur-[120px]" />
       <form onSubmit={submit} className="relative w-full max-w-sm rounded-[2rem] bg-white p-8 shadow-2xl">
-        <div aria-hidden className="absolute inset-x-0 top-0 h-1 rounded-t-[2rem]" style={{ background: "var(--brand-gradient)" }} />
         <Image src="/brand/nabhindu-mark.png" alt="Nabhindu Technologies" width={62} height={30} className="h-8 w-auto" />
         <h1 className="mt-6 text-2xl font-bold text-navy">Admin login</h1>
         <p className="mt-1 text-sm text-slate">Inquiries and call bookings dashboard.</p>
