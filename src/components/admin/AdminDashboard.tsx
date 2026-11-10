@@ -271,6 +271,9 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
             <button type="button" onClick={refresh} disabled={refreshing} className="btn btn-ghost-light !px-3 !py-2 text-sm disabled:opacity-60" title="Load latest">
               {refreshing ? "Updating…" : "Refresh"}
             </button>
+            <a href="/admin/seo" className="btn btn-ghost-light !px-3 !py-2 text-sm">
+              SEO
+            </a>
             <a href={`/api/admin/export?kind=${tab}`} className="btn btn-ghost-light hidden !px-3 !py-2 text-sm sm:inline-flex">
               Export CSV
             </a>
