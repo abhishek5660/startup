@@ -39,7 +39,7 @@ export default function Contact() {
     <section id="contact" className="section-mist overflow-hidden py-24 sm:py-32">
       <div aria-hidden className="grid-lines-light absolute inset-0 [mask-image:radial-gradient(ellipse_at_top_left,black_10%,transparent_60%)]" />
       <div aria-hidden className="absolute -right-40 top-20 h-[30rem] w-[30rem] rounded-full bg-violet/10 blur-[120px]" />
-      <div className="container-x relative grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+      <div className="container-x relative grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div>
           <Pixels className="mb-6 h-12 w-12" />
           <SplitWords text="Have an idea? Let's build it." className="display-lg max-w-[11ch] text-navy" />
@@ -61,7 +61,7 @@ export default function Contact() {
                   </span>
                   <span className="min-w-0">
                     <span className="block text-sm text-slate">{it.label}</span>
-                    <span className="block break-words font-semibold text-navy">{it.value}</span>
+                    <span className="block break-words font-semibold text-navy [overflow-wrap:anywhere]">{it.value}</span>
                   </span>
                 </>
               );
