@@ -43,7 +43,7 @@ const ymd = (d: Date) => d.toISOString().slice(0, 10);
 
 export async function searchAnalytics(dimension: "date" | "query" | "page", days: number, rowLimit = 25): Promise<GscRow[]> {
   const end = new Date();
-  end.setUTCDate(end.getUTCDate() - 2); // Search Console data ~2 din late aata hai
+  end.setUTCDate(end.getUTCDate() - 2); // Search Console data lags by about 2 days
   const start = new Date(end);
   start.setUTCDate(start.getUTCDate() - (days - 1));
 
@@ -92,22 +92,22 @@ export async function auditPage(url: string): Promise<PageAudit> {
     const noindex = /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html);
 
     const issues: string[] = [];
-    if (res.status !== 200) issues.push(`Status ${res.status} (200 hona chahiye)`);
-    if (!title) issues.push("Title missing hai");
-    else if (title.length > 60) issues.push(`Title lamba hai (${title.length}/60)`);
-    else if (title.length < 30) issues.push(`Title chhota hai (${title.length}, 30–60 rakhein)`);
-    if (!description) issues.push("Meta description missing hai");
-    else if (description.length > 160) issues.push(`Description lambi hai (${description.length}/160)`);
-    else if (description.length < 70) issues.push(`Description chhoti hai (${description.length}, 70–160 rakhein)`);
-    if (h1 === 0) issues.push("H1 heading nahi hai");
-    if (h1 > 1) issues.push(`${h1} H1 headings hain (1 rakhein)`);
-    if (!canonical) issues.push("Canonical link nahi hai");
-    if (!ogImage) issues.push("OG image nahi hai");
-    if (noindex) issues.push("Page noindex hai — Google index nahi karega");
+    if (res.status !== 200) issues.push(`Returns status ${res.status} (expected 200)`);
+    if (!title) issues.push("Missing title tag");
+    else if (title.length > 60) issues.push(`Title is too long (${title.length}/60 characters)`);
+    else if (title.length < 30) issues.push(`Title is too short (${title.length} characters; aim for 30–60)`);
+    if (!description) issues.push("Missing meta description");
+    else if (description.length > 160) issues.push(`Meta description is too long (${description.length}/160 characters)`);
+    else if (description.length < 70) issues.push(`Meta description is too short (${description.length} characters; aim for 70–160)`);
+    if (h1 === 0) issues.push("No H1 heading");
+    if (h1 > 1) issues.push(`${h1} H1 headings found (use exactly one)`);
+    if (!canonical) issues.push("Missing canonical link");
+    if (!ogImage) issues.push("Missing Open Graph image");
+    if (noindex) issues.push("Page is set to noindex, so Google will not index it");
 
     return { url, status: res.status, title, description, h1, issues };
   } catch (err) {
-    return { url, status: 0, title: "", description: "", h1: 0, issues: [`Page open nahi hua: ${err instanceof Error ? err.message : "error"}`] };
+    return { url, status: 0, title: "", description: "", h1: 0, issues: [`Could not load page: ${err instanceof Error ? err.message : "error"}`] };
   }
 }
 

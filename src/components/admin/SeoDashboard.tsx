@@ -22,7 +22,7 @@ async function load<T>(type: string, days = 28): Promise<T> {
   const res = await fetch(`/api/admin/seo?type=${type}&days=${days}`, { cache: "no-store" });
   const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
   if (res.status === 401) window.location.href = "/admin/login";
-  if (!res.ok || !data.ok) throw new Error(data.error || "Data load nahi hua.");
+  if (!res.ok || !data.ok) throw new Error(data.error || "Couldn't load data.");
   return data as T;
 }
 
@@ -63,7 +63,7 @@ function Notice({ children }: { children: React.ReactNode }) {
 }
 
 function Trend({ rows, metric, color, label }: { rows: Row[]; metric: "clicks" | "impressions"; color: string; label: string }) {
-  if (!rows.length) return <p className="text-sm text-slate">Is period me koi data nahi hai.</p>;
+  if (!rows.length) return <p className="text-sm text-slate">No data for this period.</p>;
   const W = 600, H = 160, P = 16;
   const vals = rows.map((r) => r[metric]);
   const max = Math.max(1, ...vals);
@@ -73,7 +73,7 @@ function Trend({ rows, metric, color, label }: { rows: Row[]; metric: "clicks" |
     <div>
       <div className="mb-1 flex items-center gap-2 text-sm text-slate">
         <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: color }} />
-        {label} · sabse zyada ek din me {fmt(max)}
+        {label} · peak {fmt(max)} in a day
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="h-40 w-full" preserveAspectRatio="none">
         <line x1={P} x2={W - P} y1={H - P} y2={H - P} stroke="#e6e9f6" />
@@ -93,7 +93,7 @@ function Trend({ rows, metric, color, label }: { rows: Row[]; metric: "clicks" |
 }
 
 function GscTable({ rows, first, isUrl }: { rows: Row[]; first: string; isUrl?: boolean }) {
-  if (!rows.length) return <p className="text-sm text-slate">Abhi koi data nahi hai.</p>;
+  if (!rows.length) return <p className="text-sm text-slate">No data yet.</p>;
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[520px] text-sm">
@@ -198,7 +198,7 @@ export default function SeoDashboard() {
           {gscErr ? (
             <Notice>{gscErr}</Notice>
           ) : !gsc || !totals ? (
-            <p className="text-sm text-slate">Search Console se data aa raha hai…</p>
+            <p className="text-sm text-slate">Loading Search Console data…</p>
           ) : (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -231,18 +231,18 @@ export default function SeoDashboard() {
           title="On-page SEO check"
           action={
             <button type="button" onClick={runAudit} className="btn btn-ghost-light !px-3 !py-2 text-sm">
-              Dobara check karein
+              Run again
             </button>
           }
         >
           {auditErr ? (
             <Notice>{auditErr}</Notice>
           ) : !audit ? (
-            <p className="text-sm text-slate">Sitemap ke saare pages check ho rahe hain…</p>
+            <p className="text-sm text-slate">Checking every page in the sitemap…</p>
           ) : (
             <>
               <p className="mb-4 text-sm text-slate">
-                {audit.length} pages check kiye · <b className="text-navy">{pagesWithIssues}</b> pages me sudhaar ki zaroorat hai
+                {audit.length} pages checked · <b className="text-navy">{pagesWithIssues}</b> need attention
               </p>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[640px] text-sm">
@@ -250,7 +250,7 @@ export default function SeoDashboard() {
                     <tr className="border-b border-line text-left text-xs uppercase tracking-wide text-slate">
                       <th className="py-2 pr-3">Page</th>
                       <th className="py-2 pr-3">Title</th>
-                      <th className="py-2">Kya theek karna hai</th>
+                      <th className="py-2">Issues</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -270,7 +270,7 @@ export default function SeoDashboard() {
                               ))}
                             </ul>
                           ) : (
-                            <span className="text-emerald-600">✓ Sab theek hai</span>
+                            <span className="text-emerald-600">✓ No issues</span>
                           )}
                         </td>
                       </tr>
@@ -287,12 +287,12 @@ export default function SeoDashboard() {
           title="Page speed (homepage)"
           action={
             <button type="button" onClick={runSpeed} disabled={speedBusy} className="btn !px-3 !py-2 bg-navy text-sm text-white disabled:opacity-60">
-              {speedBusy ? "Test chal raha hai (~30s)…" : speed ? "Dobara test karein" : "Speed test chalayein"}
+              {speedBusy ? "Running test (~30s)…" : speed ? "Run again" : "Run speed test"}
             </button>
           }
         >
           {speedErr && <Notice>{speedErr}</Notice>}
-          {!speed && !speedErr && <p className="text-sm text-slate">Button dabayein — Google PageSpeed se mobile aur desktop score aayega.</p>}
+          {!speed && !speedErr && <p className="text-sm text-slate">Run the test to get mobile and desktop scores from Google PageSpeed Insights.</p>}
           {speed && (
             <div className="grid gap-4 md:grid-cols-2">
               {speed.map((s) => (

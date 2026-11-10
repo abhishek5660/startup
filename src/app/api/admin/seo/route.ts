@@ -6,19 +6,19 @@ import sitemap from "@/app/sitemap";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60; // PageSpeed test me 20–40 second lag sakte hain
+export const maxDuration = 60; // A PageSpeed run can take 20–40 seconds
 
 const fail = (error: string, status: number) => NextResponse.json({ ok: false, error }, { status });
 
 export async function GET(req: NextRequest) {
-  if (!(await isAdmin())) return fail("Session expire ho gaya. Dobara login karein.", 401);
+  if (!(await isAdmin())) return fail("Your session has expired. Please log in again.", 401);
 
   const type = req.nextUrl.searchParams.get("type");
   const days = Math.min(Math.max(Number(req.nextUrl.searchParams.get("days")) || 28, 7), 90);
 
   try {
     if (type === "gsc") {
-      if (!isGscConfigured()) return fail("Search Console abhi connect nahi hai. .env.local me GSC_CLIENT_EMAIL, GSC_PRIVATE_KEY aur GSC_SITE_URL daalein.", 503);
+      if (!isGscConfigured()) return fail("Search Console is not connected. Set GSC_CLIENT_EMAIL, GSC_PRIVATE_KEY and GSC_SITE_URL in your environment variables.", 503);
       const [daily, queries, pages] = await Promise.all([
         searchAnalytics("date", days),
         searchAnalytics("query", days),
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (type === "speed") {
-      if (/localhost|127\.0\.0\.1/.test(site.url)) return fail("PageSpeed sirf live website pe chalta hai. NEXT_PUBLIC_SITE_URL me apna live domain daalein.", 400);
+      if (/localhost|127\.0\.0\.1/.test(site.url)) return fail("PageSpeed only works on a live website. Set NEXT_PUBLIC_SITE_URL to your live domain.", 400);
       const [mobile, desktop] = await Promise.all([pageSpeed(`${site.url}/`, "mobile"), pageSpeed(`${site.url}/`, "desktop")]);
       return NextResponse.json({ ok: true, results: [mobile, desktop] });
     }
