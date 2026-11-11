@@ -256,11 +256,11 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
     <div className="pb-20">
       <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
         <div className="container-x flex h-16 items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Image src="/brand/nabhindu-mark.png" alt="" width={62} height={30} className="h-7 w-auto" />
-            <span className="font-display font-bold text-navy">Dashboard</span>
+          <div className="flex min-w-0 shrink-0 items-center gap-3">
+            <Image src="/brand/nabhindu-mark.png" alt="" width={62} height={30} className="h-6 w-auto sm:h-7" />
+            <span className="hidden font-display font-bold text-navy sm:inline">Dashboard</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
             <span className="hidden items-center gap-2 text-xs text-slate md:inline-flex" aria-live="polite">
               <span className="relative flex h-2 w-2">
                 <span className={`absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 ${refreshing ? "animate-ping" : ""}`} />
@@ -268,10 +268,10 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
               </span>
               Live · updated {refreshing ? "now…" : ago}
             </span>
-            <button type="button" onClick={refresh} disabled={refreshing} className="btn btn-ghost-light !px-3 !py-2 text-sm disabled:opacity-60" title="Load latest">
+            <button type="button" onClick={refresh} disabled={refreshing} className="btn btn-ghost-light shrink-0 whitespace-nowrap !px-2.5 !py-1.5 !text-xs disabled:opacity-60 sm:!px-3 sm:!py-2 sm:!text-sm" title="Load latest">
               {refreshing ? "Updating…" : "Refresh"}
             </button>
-            <a href="/admin/seo" className="btn btn-ghost-light !px-3 !py-2 text-sm">
+            <a href="/admin/seo" className="btn btn-ghost-light shrink-0 whitespace-nowrap !px-2.5 !py-1.5 !text-xs sm:!px-3 sm:!py-2 sm:!text-sm">
               SEO
             </a>
             <a href={`/api/admin/export?kind=${tab}`} className="btn btn-ghost-light hidden !px-3 !py-2 text-sm sm:inline-flex">
@@ -280,7 +280,7 @@ export default function AdminDashboard({ inquiries: inq0, calls: calls0, error }
             <a href="/" className="btn btn-ghost-light hidden !px-3 !py-2 text-sm sm:inline-flex">
               View site
             </a>
-            <button type="button" onClick={logout} className="btn !px-3 !py-2 bg-navy text-sm text-white">
+            <button type="button" onClick={logout} className="btn shrink-0 whitespace-nowrap bg-navy !px-2.5 !py-1.5 !text-xs text-white sm:!px-3 sm:!py-2 sm:!text-sm">
               Log out
             </button>
           </div>

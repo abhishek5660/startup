@@ -173,19 +173,19 @@ export default function SeoDashboard() {
     <div className="pb-20">
       <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
         <div className="container-x flex h-16 items-center justify-between gap-3">
-          <span className="font-display font-bold text-navy">SEO Dashboard</span>
-          <div className="flex items-center gap-2">
+          <span className="min-w-0 truncate font-display font-bold text-navy">SEO<span className="hidden sm:inline"> Dashboard</span></span>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <select
               value={days}
               onChange={(e) => setDays(Number(e.target.value))}
-              className="rounded-xl border border-line bg-white px-3 py-2 text-sm text-navy"
+              className="rounded-xl border border-line bg-white px-2 py-1.5 text-xs text-navy sm:px-3 sm:py-2 sm:text-sm"
               aria-label="Time period"
             >
               <option value={7}>Last 7 days</option>
               <option value={28}>Last 28 days</option>
               <option value={90}>Last 90 days</option>
             </select>
-            <Link href="/admin" className="btn btn-ghost-light !px-3 !py-2 text-sm">
+            <Link href="/admin" className="btn btn-ghost-light shrink-0 whitespace-nowrap !px-2.5 !py-1.5 !text-xs sm:!px-3 sm:!py-2 sm:!text-sm">
               ← Dashboard
             </Link>
           </div>
