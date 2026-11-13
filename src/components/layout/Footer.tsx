@@ -128,7 +128,13 @@ export default function Footer() {
       <div className="relative border-t border-white/10">
         <div className="container-x flex flex-col gap-2 py-6 text-sm text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Nabhindu Technologies. All Rights Reserved.</p>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <a href="/privacy-policy" className="transition-colors hover:text-white">
+              Privacy Policy
+            </a>
+            <a href="/terms" className="transition-colors hover:text-white">
+              Terms &amp; Conditions
+            </a>
             <a href="/admin" rel="nofollow" className="inline-flex items-center gap-1.5 transition-colors hover:text-white">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <rect x="4" y="11" width="16" height="10" rx="2" />

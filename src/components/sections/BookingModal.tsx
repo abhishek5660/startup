@@ -357,7 +357,18 @@ function Dialog({ onClose }: { onClose: () => void }) {
               </div>
             )}
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <p className="mt-6 text-xs leading-relaxed text-slate">
+              By booking, you agree to our{" "}
+              <a href="/privacy-policy" target="_blank" className="font-medium text-electric hover:underline">
+                Privacy Policy
+              </a>{" "}
+              and{" "}
+              <a href="/terms" target="_blank" className="font-medium text-electric hover:underline">
+                Terms
+              </a>
+              .
+            </p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
               <button type="submit" disabled={status === "submitting"} className="btn btn-primary flex-1 disabled:opacity-70">
                 {status === "submitting" ? "Booking…" : "Confirm free call"}
               </button>

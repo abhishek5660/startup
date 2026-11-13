@@ -298,7 +298,11 @@ export default function ContactForm() {
 
             <div className="mt-7 flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs leading-relaxed text-slate sm:max-w-[34ch]">
-                We use your details only to reply to this inquiry. We never share them.
+                We use your details only to reply to this inquiry. We never sell them. By submitting, you agree to our{" "}
+                <a href="/privacy-policy" target="_blank" className="font-medium text-electric hover:underline">
+                  Privacy Policy
+                </a>
+                .
               </p>
               <motion.button
                 type="submit"
