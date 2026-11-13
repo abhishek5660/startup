@@ -75,9 +75,13 @@ export default function About() {
                 href="/about"
                 className="group mt-8 flex max-w-md items-center gap-4 rounded-2xl border border-line bg-white p-3 pr-5 shadow-[0_20px_50px_-35px_rgba(10,16,51,0.45)] transition-shadow hover:shadow-[0_24px_60px_-30px_rgba(30,107,255,0.45)]"
               >
-                <span aria-hidden className="flex h-14 w-14 items-center justify-center rounded-xl bg-mist font-display text-lg font-bold text-navy">
-                  AK
-                </span>
+                <Image
+                  src={founder.photo}
+                  alt={`${founder.name}, founder of Nabhindu Technologies`}
+                  width={64}
+                  height={80}
+                  className="h-16 w-16 rounded-xl object-cover object-top"
+                />
                 <span className="flex-1">
                   <span className="block font-semibold text-navy">{founder.name}</span>
                   <span className="block text-sm text-slate">
