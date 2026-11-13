@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import PageShell, { PageHero, JsonLd } from "@/components/layout/PageShell";
 import { Reveal } from "@/components/ui/motion";
 import BookCallButton from "@/components/ui/BookCallButton";
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
     url: "/about",
     title: `About ${site.name} – Founded by ${founder.name}`,
     description: `Meet ${founder.name}, founder of ${site.name} and a ${founder.university} graduate.`,
-    images: [{ url: founder.photo, width: 640, height: 800, alt: `${founder.name}, founder of ${site.name}` }],
+    images: ["/og-image.png"],
   },
 };
 
@@ -46,24 +45,7 @@ export default function AboutPage() {
       />
 
       <section className="section-light py-20 sm:py-28">
-        <div className="container-x grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <Reveal>
-            <figure className="mx-auto w-full max-w-sm">
-              <div className="overflow-hidden rounded-[2rem] shadow-[0_40px_90px_-45px_rgba(30,107,255,0.6)]">
-                <Image
-                  src={founder.photo}
-                  alt={`${founder.name}, founder of ${site.name}, at his ${founder.university} graduation`}
-                  width={640}
-                  height={800}
-                  priority
-                  className="h-auto w-full object-cover"
-                />
-              </div>
-              <figcaption className="mt-4 text-center text-sm text-slate">
-                {founder.name} · {founder.jobTitle}, {site.name}
-              </figcaption>
-            </figure>
-          </Reveal>
+        <div className="container-x max-w-4xl">
 
 
           <div>
