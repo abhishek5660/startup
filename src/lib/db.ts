@@ -2,6 +2,7 @@ import "server-only";
 import { Pool } from "pg";
 import type { ContactData } from "./validation";
 import type { BookingData } from "./booking";
+import type { ApplicationData } from "./careers";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -110,6 +111,45 @@ export async function insertConsultation(
 
 export async function markConsultationEmail(id: string, sent: boolean, error?: string) {
   await getPool().query(`UPDATE consultations SET email_sent = $2, email_error = $3 WHERE id = $1`, [id, sent, error ? error.slice(0, 500) : null]);
+}
+
+/* ── Careers applications ────────────────────────────────────────── */
+
+export async function countRecentApplicationsByIp(ipHash: string, minutes: number): Promise<number> {
+  const { rows } = await getPool().query<{ n: number }>(
+    `SELECT count(*)::int AS n FROM job_applications WHERE ip_hash = $1 AND created_at > now() - make_interval(mins => $2)`,
+    [ipHash, minutes],
+  );
+  return rows[0]?.n ?? 0;
+}
+
+export async function insertApplication(
+  data: ApplicationData,
+  meta: { reference: string; ipHash: string; userAgent: string },
+): Promise<{ id: string; createdAt: Date }> {
+  const { rows } = await getPool().query<{ id: string; created_at: Date }>(
+    `INSERT INTO job_applications (reference, full_name, email, phone, role, college, resume_url, portfolio_url, message, ip_hash, user_agent)
+     VALUES ($1, $2, $3, $4, $5, NULLIF($6, ''), $7, NULLIF($8, ''), $9, $10, $11)
+     RETURNING id, created_at`,
+    [
+      meta.reference,
+      data.fullName,
+      data.email,
+      data.phone,
+      data.role,
+      data.college,
+      data.resumeUrl,
+      data.portfolioUrl,
+      data.message,
+      meta.ipHash,
+      meta.userAgent.slice(0, 300),
+    ],
+  );
+  return { id: rows[0].id, createdAt: rows[0].created_at };
+}
+
+export async function markApplicationEmail(id: string, sent: boolean, error?: string) {
+  await getPool().query(`UPDATE job_applications SET email_sent = $2, email_error = $3 WHERE id = $1`, [id, sent, error ? error.slice(0, 500) : null]);
 }
 
 /* ── Admin dashboard ─────────────────────────────────────────────── */

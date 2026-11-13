@@ -38,6 +38,11 @@ export default function PrivacyPolicyPage() {
           and time slot, call mode and what you would like to discuss.
         </li>
         <li>
+          <strong>Careers / internship applications:</strong> your full name, email address, phone number, the role you are
+          applying for, your college or university (optional), links to your resume and portfolio, and the message you write.
+          We use these only to assess your application.
+        </li>
+        <li>
           <strong>WhatsApp, phone and email:</strong> if you contact us directly, we receive the details you choose to share, such
           as your name, number and messages. WhatsApp conversations are also subject to WhatsApp&rsquo;s own privacy policy.
         </li>
@@ -59,6 +64,7 @@ export default function PrivacyPolicyPage() {
       <ul>
         <li>To reply to your inquiry, prepare a quote and discuss your project.</li>
         <li>To schedule, confirm and hold the consultation call you booked.</li>
+        <li>To review job and internship applications and contact candidates.</li>
         <li>To deliver and support the services you hire us for.</li>
         <li>To keep our website and forms secure and free from spam.</li>
         <li>To meet legal, tax and accounting obligations.</li>
@@ -95,7 +101,8 @@ export default function PrivacyPolicyPage() {
       <h2>5. How long we keep it</h2>
       <p>
         We keep inquiry and booking details for up to <strong>24 months</strong> after our last contact with you, so we can
-        follow up on your project. If you become a client, we keep project and billing records for as long as required by
+        follow up on your project. Job and internship applications are kept for up to <strong>12 months</strong> so we can
+        consider you for future openings, unless you ask us to delete them sooner. If you become a client, we keep project and billing records for as long as required by
         Indian tax and accounting laws. After that, we delete or anonymise the information.
       </p>
 
