@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Reveal, SplitWords, TiltCard } from "@/components/ui/motion";
 import Counter from "@/components/ui/Counter";
 import { processSteps, services, techStack, values } from "@/lib/data";
+import { founder } from "@/lib/site";
 
 function ValueIcon({ kind }: { kind: string }) {
   const reduce = useReducedMotion();
@@ -64,9 +65,27 @@ export default function About() {
             </Reveal>
             <Reveal delay={0.25}>
               <p className="mt-5 max-w-[60ch] text-[0.98rem] leading-relaxed text-slate">
-                Founded by <strong className="font-semibold text-navy">Abhishek Katoch</strong> in Sector 88, Faridabad, we work
-                directly with business owners — you talk to the people who design and write your code.
+                Founded by <strong className="font-semibold text-navy">{founder.name}</strong>, a graduate of{" "}
+                {founder.university}, in Sector 88, Faridabad, we work directly with business owners — you talk to the
+                people who design and write your code.
               </p>
+            </Reveal>
+            <Reveal delay={0.35}>
+              <a
+                href="/about"
+                className="group mt-8 flex max-w-md items-center gap-4 rounded-2xl border border-line bg-white p-3 pr-5 shadow-[0_20px_50px_-35px_rgba(10,16,51,0.45)] transition-shadow hover:shadow-[0_24px_60px_-30px_rgba(30,107,255,0.45)]"
+              >
+                <span aria-hidden className="flex h-14 w-14 items-center justify-center rounded-xl bg-mist font-display text-lg font-bold text-navy">
+                  AK
+                </span>
+                <span className="flex-1">
+                  <span className="block font-semibold text-navy">{founder.name}</span>
+                  <span className="block text-sm text-slate">
+                    {founder.jobTitle} · {founder.university} graduate
+                  </span>
+                </span>
+                <span aria-hidden className="text-electric transition-transform group-hover:translate-x-1">→</span>
+              </a>
             </Reveal>
           </div>
           <Reveal delay={0.1} className="relative">

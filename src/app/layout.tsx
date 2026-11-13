@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/sora";
 import "@fontsource-variable/inter";
 import "./globals.css";
-import { site } from "@/lib/site";
+import { site, founder } from "@/lib/site";
 import { services } from "@/lib/data";
 import Providers from "@/components/layout/Providers";
 import { loaderScript } from "@/lib/loader-script";
@@ -58,10 +58,27 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const sameAs = Object.values(site.social).filter(Boolean);
+
+const founderLd = {
+  "@type": "Person",
+  "@id": `${site.url}/about#founder`,
+  name: founder.name,
+  jobTitle: founder.jobTitle,
+  image: `${site.url}${founder.photo}`,
+  url: `${site.url}/about`,
+  description: founder.bio,
+  alumniOf: { "@type": "CollegeOrUniversity", name: founder.university, url: founder.universityUrl },
+  worksFor: { "@id": `${site.url}/#organization` },
+  ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}),
+};
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": `${site.url}/#organization`,
   name: site.name,
+  alternateName: "Nabhindu",
   url: site.url,
   logo: `${site.url}/brand/icon-512.png`,
   image: `${site.url}/og-image.png`,
@@ -69,7 +86,8 @@ const jsonLd = {
   slogan: site.tagline,
   email: site.email,
   telephone: site.phone.replace(/\s/g, ""),
-  founder: { "@type": "Person", name: site.founder },
+  founder: founderLd,
+  ...(sameAs.length ? { sameAs } : {}),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Sector 88",

@@ -27,12 +27,24 @@ export const site = {
    * Only add URLs for profiles that actually exist.
    */
   social: {
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/company/nabhindu-technologies/",
     instagram: "",
     github: "",
     x: "",
     facebook: "",
   },
+} as const;
+
+/** Founder details — shown on the About section, /about page and in Google structured data. */
+export const founder = {
+  name: "Abhishek Katoch",
+  jobTitle: "Founder",
+  university: "Chitkara University",
+  universityUrl: "https://www.chitkara.edu.in/",
+  photo: "/brand/founder.jpg",
+  /** Add your personal LinkedIn profile URL here when you have one (e.g. https://www.linkedin.com/in/...). */
+  linkedin: "",
+  bio: "Abhishek Katoch is the founder of Nabhindu Technologies. A graduate of Chitkara University, he started Nabhindu in Faridabad, Haryana to help businesses get modern, fast and reliable websites and web applications — built from scratch, with the founder involved in every project.",
 } as const;
 
 export const nav = [
