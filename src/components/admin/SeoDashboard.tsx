@@ -39,9 +39,9 @@ const scoreCls = (s: number) => (s >= 90 ? "text-emerald-600" : s >= 50 ? "text-
 
 function Card({ title, action, children }: { title: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="rounded-3xl border border-line bg-white p-5 shadow-sm sm:p-6">
+    <section className="min-w-0 rounded-2xl border border-line bg-white p-4 shadow-sm sm:rounded-3xl sm:p-6">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-lg font-bold text-navy">{title}</h2>
+        <h2 className="font-display text-base font-bold text-navy sm:text-lg">{title}</h2>
         {action}
       </div>
       {children}
@@ -51,9 +51,9 @@ function Card({ title, action, children }: { title: string; action?: React.React
 
 function Tile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-line bg-white p-4">
-      <div className="text-xs font-medium uppercase tracking-wide text-slate">{label}</div>
-      <div className="mt-1 font-display text-2xl font-bold text-navy">{value}</div>
+    <div className="min-w-0 rounded-2xl border border-line bg-white p-3 sm:p-4">
+      <div className="truncate text-[11px] font-medium uppercase tracking-wide text-slate sm:text-xs">{label}</div>
+      <div className="mt-1 break-words font-display text-xl font-bold text-navy sm:text-2xl">{value}</div>
     </div>
   );
 }
@@ -71,11 +71,11 @@ function Trend({ rows, metric, color, label }: { rows: Row[]; metric: "clicks" |
   const d = pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join("");
   return (
     <div>
-      <div className="mb-1 flex items-center gap-2 text-sm text-slate">
+      <div className="mb-1 flex items-center gap-2 text-xs text-slate sm:text-sm">
         <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: color }} />
         {label} · peak {fmt(max)} in a day
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-40 w-full" preserveAspectRatio="none">
+      <svg viewBox={`0 0 ${W} ${H}`} className="h-32 w-full sm:h-40" preserveAspectRatio="none">
         <line x1={P} x2={W - P} y1={H - P} y2={H - P} stroke="#e6e9f6" />
         <path d={d} fill="none" stroke={color} strokeWidth={2.5} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {pts.map(([x, y], i) => (
@@ -95,7 +95,30 @@ function Trend({ rows, metric, color, label }: { rows: Row[]; metric: "clicks" |
 function GscTable({ rows, first, isUrl }: { rows: Row[]; first: string; isUrl?: boolean }) {
   if (!rows.length) return <p className="text-sm text-slate">No data yet.</p>;
   return (
-    <div className="overflow-x-auto">
+    <>
+      <ul className="divide-y divide-line/60 sm:hidden">
+        {rows.map((r) => (
+          <li key={r.keys[0]} className="py-3 first:pt-0 last:pb-0">
+            <div className="break-all text-sm font-medium text-navy">{isUrl ? path(r.keys[0]) : r.keys[0]}</div>
+            <div className="mt-2 grid grid-cols-4 gap-2 text-center">
+              {(
+                [
+                  ["Clicks", fmt(r.clicks)],
+                  ["Impr.", fmt(r.impressions)],
+                  ["CTR", pct(r.ctr)],
+                  ["Pos.", r.position.toFixed(1)],
+                ] as const
+              ).map(([l, v]) => (
+                <div key={l} className="rounded-lg bg-mist px-1 py-1.5">
+                  <div className="text-sm font-semibold tabular-nums text-navy">{v}</div>
+                  <div className="text-[10px] uppercase tracking-wide text-slate">{l}</div>
+                </div>
+              ))}
+            </div>
+          </li>
+        ))}
+      </ul>
+    <div className="hidden overflow-x-auto sm:block">
       <table className="w-full min-w-[520px] text-sm">
         <thead>
           <tr className="border-b border-line text-left text-xs uppercase tracking-wide text-slate">
@@ -121,6 +144,7 @@ function GscTable({ rows, first, isUrl }: { rows: Row[]; first: string; isUrl?: 
         </tbody>
       </table>
     </div>
+    </>
   );
 }
 
@@ -170,7 +194,7 @@ export default function SeoDashboard() {
   const pagesWithIssues = audit?.filter((a) => a.issues.length).length ?? 0;
 
   return (
-    <div className="pb-20">
+    <div className="overflow-x-hidden pb-20">
       <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
         <div className="container-x flex h-16 items-center justify-between gap-3">
           <span className="min-w-0 truncate font-display font-bold text-navy">SEO<span className="hidden sm:inline"> Dashboard</span></span>
@@ -192,7 +216,7 @@ export default function SeoDashboard() {
         </div>
       </header>
 
-      <div className="container-x mt-8 space-y-6">
+      <div className="container-x mt-4 space-y-4 sm:mt-8 sm:space-y-6">
         {/* 1. Search Console */}
         <Card title="Google Search performance">
           {gscErr ? (
@@ -216,7 +240,7 @@ export default function SeoDashboard() {
         </Card>
 
         {gsc && (
-          <div className="grid gap-6 xl:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 xl:grid-cols-2">
             <Card title="Top keywords">
               <GscTable rows={gsc.queries} first="Keyword" />
             </Card>
@@ -230,7 +254,7 @@ export default function SeoDashboard() {
         <Card
           title="On-page SEO check"
           action={
-            <button type="button" onClick={runAudit} className="btn btn-ghost-light !px-3 !py-2 text-sm">
+            <button type="button" onClick={runAudit} className="btn btn-ghost-light !px-3 !py-2 !text-xs sm:!text-sm">
               Run again
             </button>
           }
@@ -244,7 +268,28 @@ export default function SeoDashboard() {
               <p className="mb-4 text-sm text-slate">
                 {audit.length} pages checked · <b className="text-navy">{pagesWithIssues}</b> need attention
               </p>
-              <div className="overflow-x-auto">
+              <ul className="divide-y divide-line/60 sm:hidden">
+                {audit.map((a) => (
+                  <li key={a.url} className="py-3 first:pt-0 last:pb-0">
+                    <a href={a.url} target="_blank" rel="noopener noreferrer" className="break-all text-sm font-medium text-electric hover:underline">
+                      {path(a.url)}
+                    </a>
+                    <div className="mt-1 break-words text-sm text-navy">{a.title || "—"}</div>
+                    <div className="mt-1.5 text-sm">
+                      {a.issues.length ? (
+                        <ul className="list-disc space-y-0.5 pl-4 text-amber-800">
+                          {a.issues.map((i) => (
+                            <li key={i}>{i}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-emerald-600">✓ No issues</span>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full min-w-[640px] text-sm">
                   <thead>
                     <tr className="border-b border-line text-left text-xs uppercase tracking-wide text-slate">
@@ -256,7 +301,7 @@ export default function SeoDashboard() {
                   <tbody>
                     {audit.map((a) => (
                       <tr key={a.url} className="border-b border-line/60 align-top last:border-0">
-                        <td className="py-2 pr-3">
+                        <td className="max-w-[220px] break-all py-2 pr-3">
                           <a href={a.url} target="_blank" rel="noopener noreferrer" className="text-electric hover:underline">
                             {path(a.url)}
                           </a>
@@ -286,7 +331,7 @@ export default function SeoDashboard() {
         <Card
           title="Page speed (homepage)"
           action={
-            <button type="button" onClick={runSpeed} disabled={speedBusy} className="btn !px-3 !py-2 bg-navy text-sm text-white disabled:opacity-60">
+            <button type="button" onClick={runSpeed} disabled={speedBusy} className="btn !px-3 !py-2 bg-navy !text-xs text-white disabled:opacity-60 sm:!text-sm">
               {speedBusy ? "Running test (~30s)…" : speed ? "Run again" : "Run speed test"}
             </button>
           }
@@ -298,7 +343,7 @@ export default function SeoDashboard() {
               {speed.map((s) => (
                 <div key={s.strategy} className="rounded-2xl border border-line p-4">
                   <div className="mb-3 font-display font-bold capitalize text-navy">{s.strategy}</div>
-                  <div className="grid grid-cols-4 gap-2 text-center">
+                  <div className="grid grid-cols-2 gap-3 text-center min-[420px]:grid-cols-4 min-[420px]:gap-2">
                     {(
                       [
                         ["Performance", s.performance],
@@ -307,9 +352,9 @@ export default function SeoDashboard() {
                         ["Best practices", s.bestPractices],
                       ] as const
                     ).map(([label, v]) => (
-                      <div key={label}>
+                      <div key={label} className="min-w-0">
                         <div className={`font-display text-2xl font-bold ${scoreCls(v)}`}>{v}</div>
-                        <div className="text-[11px] text-slate">{label}</div>
+                        <div className="text-[11px] leading-tight text-slate">{label}</div>
                       </div>
                     ))}
                   </div>
